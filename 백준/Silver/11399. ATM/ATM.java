@@ -1,3 +1,8 @@
+/* Arrays.sort 와 Collections.sort 의 시간복잡도 차이
+둘의 시간복잡도 평균은 O(nlon(n))
+하지만 Arrays.sort의 최악이 O(n^2) 이므로 Collections.sort가 좋은 듯!
+*/
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
