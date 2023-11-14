@@ -5,11 +5,18 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 import java.util.StringTokenizer;
- 
- 
+  
+  
 // SWEA_핀볼게임
+/* 디버깅 - 틀린 부분, 다음에 주의할 부분, 알게된 부분
+ * 72라인 - 방향설정만 하는 부분으로 다음 블럭은 change 메서드에 가서 하므로 여기선 다음 블럭 탐색 X. 이 코드 사용 시 바로 옆 블럭 확인 X.
+ * 98라인 - 벽에 부딪히는 범위 설정 ( 벽에 부딪히는 것이므로 벽을 벗어나는 것과 같다.)
+ * 99라인 - 방향이 반대로 바뀌는 경우, 왔던 경로를 똑같이 되돌아가므로 score = scopre *2 +1 (+1은 부딪쳐서 얻은 점수)
+ * 134라인 - 게임 end 조건은 IndexOutOfBound Exception이 날 수 있으므로 범위 유효성 (이 문제에서는 벽에 부딪히는 범위) 다음에 위치하는 것이 맞음.
+ * 148라인 - 웜홀 찾는 조건 설정 ( 웜홀을 찾을 때 위치가 다른 것 -> 행과 열 모두 다르다 X 따라서 and 조건이 아닌 or조건이 맞음.
+ * */
 public class Solution {
-     
+      
     static int N, dir, score, maxScore;
     static int[][] map;
     static int[] dr = {-1, 1, 0, 0}; //상하좌우
@@ -23,16 +30,16 @@ public class Solution {
             this.c = c;
         }
     }
- 
+  
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-         
+          
         int T = Integer.parseInt(br.readLine());
-         
+          
         for (int tc=1; tc<T+1; tc++) { //tc
             N = Integer.parseInt(br.readLine().trim());
-            
+             
             map = new int[N][N];
             start = new ArrayList<>();
             for (int i=0; i<N; i++) {
@@ -48,51 +55,51 @@ public class Solution {
             bfs(); // 시작 위치 선정 경우의 수 + 게임 진행 ㄱㄱ
             System.out.println("#"+tc+" "+maxScore);
         } //tc end
-         
+          
     }
-     
-
-
+      
+ 
+ 
     // 게임판 위에서 출발 위치와 진행 방향을 임의로 선정가능 할 때,
     // 게임에서 얻을 수 있는 점수의 최댓값을 구하여라! (단, 블록, 웜홀 또는 블랙홀이 있는 위치에서는 출발할 수 없다.)
     private static void bfs() {
-        
+         
         for (int i=0; i<start.size(); i++) { //가능한 시작 위치 뽑아서
             Data st = start.get(i);
-            
-            
+             
+             
             for (int d=0; d<4; d++) { // 4방향 탐색
 //                int nr = st.r + dr[d];
 //                int nc = st.c + dc[d];
                 dir = d;
-                
+                 
 //                if (nr < 0 || nr > N-1 || nc < 0 || nc > N-1) { // 범위 유효성 판단
 //                    continue;
 //                }
-                
+                 
                 score = 0; // 시작위치, 방향에 따른 경우의 수 -> 점수 초기화
                 play(st.r, st.c);
                 maxScore = (maxScore > score)?maxScore : score;
             }
         }
-        
+         
     }
-    
+     
     private static void play(int r, int c) {
         int nr = r;
         int nc = c;
         while (true) {
             nr += dr[dir];
             nc += dc[dir];
-            
-            
+             
+             
             // 게임 진행 ing
             // 점수는 벽이나 블록에 부딪힌 횟수가 된다. 
             if (nr < 0 || nr > N-1 || nc < 0 || nc > N-1 || map[nr][nc] == 5) { //벽에 충돌 -> 점수, 방향 전환 // 블록 5번도 동일.
-            	score = score * 2 +1;
+                score = score * 2 +1;
                 return;
             }
-            
+             
             if (map[nr][nc] > 0 && map[nr][nc] < 5) {// 블록에 충돌 -> 점수, 방향 전환
                 score++;
                 // 블록의 수평면이나 수직면을 만날 경우 방향을 바꿔 반대 방향으로 돌아오고, 경사면을 만날 경우에는 직각으로 진행 방향이 꺾이게 된다.
@@ -122,10 +129,10 @@ public class Solution {
                 }
                 continue;
             }
-            
+             
          // 게임 end
             if ((nr == r && nc == c) || map[nr][nc] == -1) return; // 블랙홀 or 출발 지점으로 돌아옴.
-            
+             
             // 핀볼이 웜홀에 빠지면 동일한 숫자를 가진 다른 반대편 웜홀로 빠져 나오게 되며 진행방향은 그대로 유지된다.
             // (웜홀을 통과하는 것은 점수에 포함되지 않는다.)
             if (map[nr][nc] > 5 && map[nr][nc] < 11) {
@@ -134,10 +141,10 @@ public class Solution {
                 nc = pair.c;
                 continue;
             }
-            
+             
         }
     }
-    
+     
     private static Data find(int r, int c, int num) {
         int wr = r;
         int wc = c;
