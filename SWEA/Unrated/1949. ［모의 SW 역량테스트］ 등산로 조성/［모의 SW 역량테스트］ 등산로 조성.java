@@ -6,9 +6,9 @@ import java.util.PriorityQueue;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class Solution { //산악 구조 로봇
+public class Solution { //등산로
 	
-	static int N, K, max, len;
+	static int N, K, top, max;
 	static int[][] map;
 	static boolean[][][] v;
 	static int[] dr = {-1, 1, 0, 0};
@@ -28,35 +28,37 @@ public class Solution { //산악 구조 로봇
 			map = new int[N][N];
 			v = new boolean[N][N][2];
 			
-			int max = 0;
+			top = 0;
 			for (int i=0; i<N; i++) {
 				st = new StringTokenizer(br.readLine());
 				for (int j=0; j<N; j++) {
 					int val = map[i][j] = Integer.parseInt(st.nextToken());
-					max = (val > max)? val : max; // 가장 높은 봉우리의 높이 찾기
+					top = (val > top)? val : top; // 가장 높은 봉우리의 높이 찾기
 				}
 			}// map end
-			len = 0;
+			max = 0;
 			for (int r=0; r<N; r++) {
 				for (int c=0; c<N; c++) {
-					if (map[r][c] == max) { // 가장 높은 봉우리에서 시작
+					if (map[r][c] == top) { // 가장 높은 봉우리에서 시작
 						v[r][c][1] = true;
 						dfs(r, c, 1, 1);
 						v[r][c][1] = false;
 					}
 				}
 			}
-			System.out.println("#"+tc+" "+len);
+			System.out.println("#"+tc+" "+max);
 		}// tc end
 	}
 	
 	private static void dfs(int r, int c, int depth, int k) { 
 		// k -> 0:깎고 도착, 1: 안 깎고 도착
-		// 기저조건
-		if (map[r][c] < 1) {
-			len = (len > depth)? len:depth;
-			return;
-		}
+		// f : 최장 거리는 dfs 돌릴 때마다 depth로 max를 갱신해주는 것이 더 깔끔!!!
+//		before >
+//		if (map[r][c] < 1) {
+//			len = (len > depth)? len:depth;
+//			return;
+//		}
+		max = (max > depth)? max:depth;
 		
 		for (int d=0; d<4; d++) {
 			int nr = r+dr[d];
@@ -72,23 +74,22 @@ public class Solution { //산악 구조 로봇
 					dfs(nr, nc, depth+1, k);
 					v[nr][nc][k] = false;
 				}
-			} else {
-				for (int i=1; i<K+1; i++) {
+			} 
+			if (map[nr][nc] - K < map[r][c]) { // f: 최대로 깎았을 때 전진 가능하면 진행하도록하고,
+				int h = map[r][c] - (map[nr][nc] -1);
+				for (int i= h; i<K+1; i++) { // f : 1 ~ K 모두 하지 말고 깎을 높이 최소부터! 예) 현재 6 -> 다음 8 이면 최소 -3 부터 전진 가능. => 3,4,5 로 진행.
 					if (map[nr][nc] - i < map[r][c]) {
-						//깎아야 하므로 안 깎고 도착한 경우만 가능
-						if(k == 1 && !v[nr][nc][k]) {
-							v[nr][nc][k] = true;
+						if(k == 1 && !v[nr][nc][k]) { //깎아야 하므로 안 깎고 도착한 경우만 가능
+							v[nr][nc][k] = true; // f : 깎을 수 있기 때문에 방문체크 필수!! 잘했음.
 							map[nr][nc] -= i;
 							dfs(nr, nc, depth+1, 0);
 							v[nr][nc][k] = false;
 							map[nr][nc] += i;
 						}
-					} else {
-						len = (len > depth)? len:depth;
-						continue;
 					}
 				}
 			}
+
 		}
 	}
 	
