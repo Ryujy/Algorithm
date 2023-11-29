@@ -1,96 +1,75 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.PriorityQueue;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
-public class Solution { //등산로
+public class Solution {
 	
-	static int N, K, top, max;
+	static int N, K, max;
 	static int[][] map;
-	static boolean[][][] v;
 	static int[] dr = {-1, 1, 0, 0};
 	static int[] dc = {0, 0, -1, 1};
-	
-	public static void main(String[] args) throws Exception {
+	static boolean[][] v;
+
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
+		
+		// 최대한 긴 등산로 => DFS
+		// 지형의 높이 -> 진행 방향 조건 있음
+		// 한 곳을 깎아서 갈 수 있음
+		// 가장 높은 봉우리 -> 내리막길 && 최장 거리 이므로 최소 차이나도록 감. 즉, 최대 K만큼 깎을 수 있지만 최소로 깎는 것이 좋음.
 		
 		int T = Integer.parseInt(br.readLine());
-		
 		for (int tc=1; tc<T+1; tc++) {
-			st = new StringTokenizer(br.readLine());
-			N = Integer.parseInt(st.nextToken());
-			K = Integer.parseInt(st.nextToken());
-			
+			StringTokenizer st = new StringTokenizer(br.readLine());
+			N = Integer.parseInt(st.nextToken()); // 지도의 한 변의 길이
 			map = new int[N][N];
-			v = new boolean[N][N][2];
+			v = new boolean[N][N];
+			K = Integer.parseInt(st.nextToken()); // 최대 공사 가능 깊이
 			
-			top = 0;
+			int top = 0;
 			for (int i=0; i<N; i++) {
 				st = new StringTokenizer(br.readLine());
-				for (int j=0; j<N; j++) {
+				for(int j=0; j<N; j++) {
 					int val = map[i][j] = Integer.parseInt(st.nextToken());
-					top = (val > top)? val : top; // 가장 높은 봉우리의 높이 찾기
+					top = (top > val)?top:val; //가장 높은 봉우리 찾기
 				}
-			}// map end
+			}
+			
 			max = 0;
-			for (int r=0; r<N; r++) {
-				for (int c=0; c<N; c++) {
-					if (map[r][c] == top) { // 가장 높은 봉우리에서 시작
-						v[r][c][1] = true;
-						dfs(r, c, 1, 1);
-						v[r][c][1] = false;
+			for (int i=0; i<N; i++) {
+				for (int j=0; j<N; j++) {
+					if (map[i][j] == top) {
+						makeRoad(i, j, 1, false);
 					}
 				}
 			}
 			System.out.println("#"+tc+" "+max);
+			
 		}// tc end
+
 	}
 	
-	private static void dfs(int r, int c, int depth, int k) { 
-		// k -> 0:깎고 도착, 1: 안 깎고 도착
-		// f : 최장 거리는 dfs 돌릴 때마다 depth로 max를 갱신해주는 것이 더 깔끔!!!
-//		before >
-//		if (map[r][c] < 1) {
-//			len = (len > depth)? len:depth;
-//			return;
-//		}
-		max = (max > depth)? max:depth;
+	private static void makeRoad(int r, int c, int depth, boolean isShaved) {
+		max = (max>depth)?max:depth;
+		
+		v[r][c] = true; //방문체크
 		
 		for (int d=0; d<4; d++) {
 			int nr = r+dr[d];
-			int nc = c+dc[d];
+			int nc = c+dc[d];  // 오타 조심...ㅠㅠ **********************************
 			
-			if (nr < 0 || nr > N-1 || nc < 0 || nc > N-1) {
-				continue;
+			if (nr < 0 || nr > N-1 || nc < 0 || nc > N-1 || v[nr][nc]) continue;
+			if (map[nr][nc] < map[r][c]) {
+				makeRoad(nr, nc, depth+1, isShaved);
+			} else if (!isShaved && map[nr][nc] - K < map[r][c] ) { // if로 해야함. 각자 다른 경우이므로 *********
+				int temp = map[nr][nc];
+				map[nr][nc] = map[r][c] - 1;
+				makeRoad(nr, nc, depth+1, true);
+				map[nr][nc] = temp; //복구
 			}
-			// 현재보다 낮은 곳으로만 전진
-			if (map[nr][nc] < map[r][c]) { // 그냥 낮은 경우
-				if (!v[nr][nc][k]) {
-					v[nr][nc][k] = true;
-					dfs(nr, nc, depth+1, k);
-					v[nr][nc][k] = false;
-				}
-			} 
-			if (map[nr][nc] - K < map[r][c]) { // f: 최대로 깎았을 때 전진 가능하면 진행하도록하고,
-				int h = map[r][c] - (map[nr][nc] -1);
-				for (int i= h; i<K+1; i++) { // f : 1 ~ K 모두 하지 말고 깎을 높이 최소부터! 예) 현재 6 -> 다음 8 이면 최소 -3 부터 전진 가능. => 3,4,5 로 진행.
-					if (map[nr][nc] - i < map[r][c]) {
-						if(k == 1 && !v[nr][nc][k]) { //깎아야 하므로 안 깎고 도착한 경우만 가능
-							v[nr][nc][k] = true; // f : 깎을 수 있기 때문에 방문체크 필수!! 잘했음.
-							map[nr][nc] -= i;
-							dfs(nr, nc, depth+1, 0);
-							v[nr][nc][k] = false;
-							map[nr][nc] += i;
-						}
-					}
-				}
-			}
-
 		}
+		
+		v[r][c] = false; //복구
 	}
-	
 }
