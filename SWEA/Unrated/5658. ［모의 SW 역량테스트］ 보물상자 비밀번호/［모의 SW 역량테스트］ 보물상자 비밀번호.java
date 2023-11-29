@@ -40,7 +40,7 @@ public class Solution { // 보물상자 비밀번호
 			
 			int k=0;
 			for (String s: set) {
-				if(++k == K) {
+				if(++k == K) { // K번째 체크 **************************************
 					System.out.println("#"+tc+" "+Integer.parseInt(s,16));
 				}
 			}
