@@ -37,7 +37,7 @@ public class Solution {
             W = Integer.parseInt(st.nextToken());
             H = Integer.parseInt(st.nextToken());
  
-            map = new int[H + 1][W];
+            map = new int[H][W];
  
             for (int h = 0; h < H; h++) {
                 st = new StringTokenizer(br.readLine());
@@ -46,14 +46,13 @@ public class Solution {
                 }
             }
              
-            minBrick = 0;
+            minBrick = 0; 
             for (int i = 0; i < W; i++) {
                 for (int j = 0; j < H; j++) {
                     if (map[j][i] != 0) {
-                        map[H][i] += 1;
+                    	minBrick++; // 최종 최소 벽돌 개수가 저장될 변수
                     }
                 }
-                minBrick += map[H][i];
             }
  
             // N개의 벽돌을 떨어트려 최대한 많은 벽돌 제거 -> W개 중 N개 => 중복 순열
@@ -62,25 +61,28 @@ public class Solution {
         }
     }
  
-    static void dfs(int cnt, int[][] prevMap, int block) {
+    static void dfs(int cnt, int[][] prevMap, int block) { // 공 떨어뜨린 횟수, 맵, 남은 벽돌 수
         minBrick = (block > minBrick) ? minBrick : block;
+        
+        if (minBrick == 0) return; // 벽돌이 다 깨짐
          
         if (cnt == N) {
             return;
         }
  
-        int[][] copy = new int[H+1][W];
-         
-        for (int i = 0; i < W; i++) {
+        int[][] copy = new int[H][W];
+        
+        // 중복 순열
+        for (int i = 0; i < W; i++) { //열
              
              
             for (int j = 0; j < H; j++) { // dfs로 가져온 맵 copy맵으로 옮기기
                 for (int k = 0; k < W; k++) {
-                    copy[j][k] = prevMap[j][k];
+                    copy[j][k] = prevMap[j][k]; // cnt 번까지 벽돌 깨고 내린 상황
                 }
             }
  
-            for (int j = 0; j < H; j++) {
+            for (int j = 0; j < H; j++) { // 행
                 if (copy[j][i] != 0) {
                     int b = broke(j, i, copy);
                     dfs(cnt + 1, copy, b);
@@ -125,24 +127,20 @@ public class Solution {
         int min = 0;
         Stack<Integer> s = new Stack<>();
  
-         
         for (int w = 0; w < W; w++) {
-            int cnt = 0;
             for (int h = 0; h < H; h++) {
                 if (copy[h][w] == 0) {
                     continue;
                 }
                 s.add(copy[h][w]);
                 copy[h][w] = 0;
-                cnt++;
+                min++;
             }
-            copy[H][w] = cnt;
             for (int h = H - 1; h > -1; h--) {
                 if (s.empty())
                     break;
                 copy[h][w] = s.pop();
             }
-            min += cnt;
         }
         return min;
     }
