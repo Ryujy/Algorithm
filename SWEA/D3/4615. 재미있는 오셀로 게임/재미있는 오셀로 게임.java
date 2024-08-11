@@ -7,7 +7,6 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 // SWEA_오셀로 게임
-// ******************************  문제에 대한 이해와 오타 조심   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 public class Solution {
 
 	static int N, M;
