@@ -7,11 +7,14 @@ class Solution { //사다리타기
         for (int i=0; i<n; i++){
             // 알파벳 담으려면 아르키 숫자 로 해야할 듯
             answer[i] = (char)('A' + i);
+            // answer[i] = (char)(i + 65);  // 이 방법도 가능
         }
 
         // 가로줄 탐색 ladder의 length만큼
         for (int l=0; l<ladder.length; l++){ // 가로줄 탐색
-            for (int s=0; s< ladder[l].length; s++){ // 가로 막대 탐색
+        // for (int[] line : ladder){}         // 방법2.
+            // for (int s : line){}            // 방법2. 
+            for (int s=0; s< ladder[l].length; s++){ // 가로 막대 탐색   
                 int v = ladder[l][s];
                 char tmp = answer[v-1];
                 answer[v-1] = answer[v];
