@@ -1,4 +1,4 @@
-class Solution {
+class Solution { // 행렬 테두리 회전하기
     static int[] dr = {0, 1, 0, -1};
     static int[] dc = {1, 0, -1, 0};
     static int[][] board;
@@ -31,20 +31,20 @@ class Solution {
         int cr = query[0] - 1;
         int cc = query[1] - 1;
         int min = Integer.MAX_VALUE;
-        int tmp = board[cr][cc]; // 8
+        int tmp = board[cr][cc];
         for (int d=0; d<4; d++){
-            int nr = cr + dr[d];
-            int nc = cc + dc[d];
             
-            while (nr >= sr && nr <= er && nc >= sc && nc <= ec){
+            while (true){
+                int nr = cr + dr[d];
+                int nc = cc + dc[d];
+                if (nr < sr || nr > er || nc < sc || nc > ec) break;
+                
                 min = Math.min(min, tmp);
                 int tmp2 = board[nr][nc];
                 board[nr][nc] = tmp;
                 tmp = tmp2;
                 cr = nr;
                 cc = nc;
-                nr += dr[d];
-                nc += dc[d];
             }
         }
         return min;
