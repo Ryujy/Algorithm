@@ -5,12 +5,12 @@ boj, swea, programmers, Inflearn
 
 | 문제 분류 | 문제 | 문제 제목 | 정답 코드 | 풀이일자 | 복습일자 |
 | :--: | :--: | :--: | :--: | :--: | :--: |
-| Inflearn | it 대기업 유제 | [시뮬레이션]3.잃어버린 강아지 | 강의 자료 참고 | |
-| Inflearn | it 대기업 유제 | [시뮬레이션]4.좌석번호 | 강의 자료 참고 | |
-| Inflearn | it 대기업 유제 | [시뮬레이션]5.최대길이 바이토닉 | 강의 자료 참고 | |
-| Inflearn | it 대기업 유제 | [시뮬레이션]6.과일가져가기 | 강의 자료 참고 | |
-| BOJ | 14503 | [로봇 청소기](https://www.acmicpc.net/problem/14503) | [정답 코드](../0x0D/solutions/14503.cpp) | |
-| BOJ | 15686 | [치킨 배달](https://www.acmicpc.net/problem/15686) | [정답 코드](../0x0D/solutions/15686.cpp) | |
+| Inflearn | it 대기업 유제 | [시뮬레이션]3.잃어버린 강아지 | 강의 자료 참고 | 24.08.31 | |
+| Inflearn | it 대기업 유제 | [시뮬레이션]4.좌석번호 | 강의 자료 참고 | 24.08.31 | |
+| Inflearn | it 대기업 유제 | [시뮬레이션]5.최대길이 바이토닉 | 강의 자료 참고 | 24.09.01 | |
+| Inflearn | it 대기업 유제 | [시뮬레이션]6.과일가져가기 | 강의 자료 참고 | 24.09.01 | |
+| BOJ | 14503 | [로봇 청소기](https://www.acmicpc.net/problem/14503) | [정답 코드](../0x0D/solutions/14503.cpp) | 24.09.01 | |
+| BOJ | 15686 | [치킨 배달](https://www.acmicpc.net/problem/15686) | [정답 코드](../0x0D/solutions/15686.cpp) | 24.09.01 | |
 
 <!--
 | 연습 문제 | 18808 | [스티커 붙이기](https://www.acmicpc.net/problem/18808) | [정답 코드](../0x0D/solutions/18808.cpp) |
