@@ -1,50 +1,55 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.StringTokenizer;
 
-// 백준 - 배열 합치기
+// BOJ_11728 배열 합치기
 public class Main {
-	
-	static int N, M;
-	static int[] A, B, C;
-	static ArrayList<Integer> list;
-	
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		StringBuilder sb = new StringBuilder();
-		
-		N = Integer.parseInt(st.nextToken()); //배열 A의 크기
-		M = Integer.parseInt(st.nextToken()); //배열 B의 크기
-		A = new int[N];
-		B = new int[M];
-		C = new int[N+M];
-		
-		st = new StringTokenizer(br.readLine());
-		for (int i=0; i<N; i++) {
-			A[i] = Integer.parseInt(st.nextToken());
-		}
-		
-		st = new StringTokenizer(br.readLine());
-		for (int j=0; j<M; j++) {
-			B[j] = Integer.parseInt(st.nextToken());
-		}
-		
-		// mergesort
-		for (int a=0,b=0,c=0; c<N+M; c++) {
-			if (b == M) C[c] = A[a++];
-			else if (a == N) C[c] = B[b++];
-			else if (A[a] <= B[b]) C[c] = A[a++];
-			else if (A[a] > B[b]) C[c] = B[b++];
-		}
-		
-		for (int i=0; i<N+M; i++) {
-			sb.append(C[i]).append(" ");
-		}
-		System.out.print(sb);
-	}
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+
+        int[] a = new int[n];
+        int[] b = new int[m];
+
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < n; i++){
+            a[i] = Integer.parseInt(st.nextToken());
+        }
+        st = new StringTokenizer(br.readLine());
+        for (int i = 0; i < m; i++){
+            b[i] = Integer.parseInt(st.nextToken());
+        }
+
+        twoPointers(n, m, a, b);
+    }
+
+    private static void twoPointers(int n, int m, int[] a, int[] b){
+        int p1 = 0, p2 = 0;
+
+        StringBuilder sb = new StringBuilder();
+        while(p1 < n && p2 < m){
+            if(a[p1] <= b[p2]){
+                sb.append(a[p1++]);
+            } else {
+                sb.append(b[p2++]);
+            }
+            sb.append(" ");
+        }
+
+        while(p1 < n){
+            sb.append(a[p1++]).append(" ");
+        }
+        while(p2 < m){
+            sb.append(b[p2++]).append(" ");
+        }
+
+        System.out.println(sb);
+    }
+
 }
