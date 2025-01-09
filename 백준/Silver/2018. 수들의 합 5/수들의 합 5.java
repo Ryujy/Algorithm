@@ -14,7 +14,6 @@ public class Main {
 
         int p1 = 1, p2 = 1;
         int sum = p1, cnt = 1;
-        for (int i=1; i<n; i++){
             while(p1 < n){
                 if (sum == n){
                     cnt++;
@@ -26,7 +25,7 @@ public class Main {
                     sum -= p1++;
                 }
             }
-        }
+        
 
         System.out.println(cnt);
     }
