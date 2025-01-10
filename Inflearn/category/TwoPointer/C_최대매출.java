@@ -30,11 +30,18 @@ public class C_최대매출 {
             sum += arr[i];
         }
         int max = sum;
-        while (p1 < (n - k)) {
-            sum += arr[p1+k];
-            sum -= arr[p1++];
+
+        // 아래 while문과 for문의 성능 차이는 미미하나 for문이 좀 더 보기 쉬움!
+        for(int j=k; j<n; j++){
+            sum += (arr[j] - arr[j-k]);
             max = Math.max(max, sum);
         }
+        
+        // while (p1 < (n - k)) {
+        //     sum += arr[p1+k];
+        //     sum -= arr[p1++];
+        //     max = Math.max(max, sum);
+        // }
 
         System.out.println(max);
     }
