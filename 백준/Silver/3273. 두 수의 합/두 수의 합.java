@@ -4,42 +4,40 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
+// BOJ_3273 두 수의 합
 public class Main {
 
-	static StringBuilder sb = new StringBuilder();
-	static int n, x;
-	static int[] nums;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public static void main(String args[]) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		
-		n = Integer.parseInt(br.readLine());
-		nums = new int[n];
-		
-		st = new StringTokenizer(br.readLine());
-		for (int i=0; i<n; i++) {
-			nums[i] = Integer.parseInt(st.nextToken());
-		}
-		x = Integer.parseInt(br.readLine());
-		
-		Arrays.sort(nums);
-		int start = 0;
-		int end = n-1;
-		int res = 0;
-		
-		while(start < end) {
-			int sum = nums[start] + nums[end];
-			if (sum < x) {
-				start += 1;
-			} else {
-				if (sum == x) {
-					res++;
-				}
-				end -= 1;
-			}
-		}
-		
-		System.out.println(res);
-	}
+        int n = Integer.parseInt(st.nextToken());
+
+        int[] arr = new int[n];
+        st = new StringTokenizer(br.readLine());
+        for (int i=0; i<n; i++){
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
+        Arrays.sort(arr);
+        // 1 2 3 5 7 9 10 11 12
+        int x = Integer.parseInt(br.readLine());
+
+        int lt = 0, rt = n-1, sum = 0, cnt = 0;
+
+        while(lt < rt){
+            sum = arr[lt] + arr[rt];
+            if(sum == x) {
+                cnt++;
+                lt++;
+                rt--;
+            } else if(sum > x){
+                rt--;
+            } else {
+                lt++;
+            }
+        }
+
+        System.out.println(cnt);
+    }
+
 }
