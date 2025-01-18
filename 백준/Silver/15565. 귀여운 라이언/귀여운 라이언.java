@@ -1,35 +1,41 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
+// BOJ_15565 귀여운 라이언
 public class Main {
-    public static void main(String[] args) throws IOException{
+
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken()); // 인형의 수
+        int k = Integer.parseInt(st.nextToken()); // 라이언 인형 연속 개수
 
-        int N = Integer.parseInt(st.nextToken()); // 라이언, 어피치 인형 개수
-        int K = Integer.parseInt(st.nextToken()); // 라이언 인형 K개
-
-        int[] arr = new int[N]; // 인형 배열
-
+        int[] arr = new int[n];
         st = new StringTokenizer(br.readLine());
-        for (int i=0; i<N; i++) { // 1 - 라이언, 2 - 어피치
+        for (int i=0; i<n; i++){
             arr[i] = Integer.parseInt(st.nextToken());
         }
 
-        int min = Integer.MAX_VALUE;
-        int cnt = 0;
-
-        for(int start=0, end=0; start<N; start++) {
-            while (end < N && cnt < K) { // K개 이상 조건이 미충족
-                if (arr[end] == 1) cnt++;
-                end++;
+        int lion = 0, lt = 0, rt = 0, min = Integer.MAX_VALUE;
+        while(rt < n){
+            if(arr[rt]==1) lion++;
+            if(lion >= k) {
+                min = Math.min(min, rt - lt + 1);
+                if(arr[lt] == 1){
+                    lion--;
+                    lt++;
+                }
+                while(arr[lt]!=1){
+                    lt++;
+                }
             }
-            int len = end - start;
-            if (cnt == K) min = min > len ? len : min;
-            if (arr[start] == 1) cnt--;
+            rt++;
         }
-        if (min == Integer.MAX_VALUE) System.out.println(-1);
-        else System.out.println(min);
-
+        if(min == Integer.MAX_VALUE) min = -1;
+        System.out.println(min);
     }
 }
