@@ -1,49 +1,37 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
-import java.util.StringTokenizer;
 
-// 백준 - 절댓값 힙
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-	static int N, M;
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		PriorityQueue<Integer> pq = new PriorityQueue<>((o1, o2)->{
-			if (Math.abs(o1) == Math.abs(o2)) {
-				return o1 - o2;
-			} else {
-				return Math.abs(o1) - Math.abs(o2);
-			}
-		});
-		StringBuilder sb = new StringBuilder();
-		
-		int N = Integer.parseInt(br.readLine());
-		for (int i=0; i<N; i++) {
-			int x = Integer.parseInt(br.readLine());
-			if (x == 0) {
-				if (pq.isEmpty()) {
-					sb.append(0);
-				}else {
-					sb.append(pq.poll());
-				}
-				sb.append("\n");
-			} else {
-				pq.offer(x);
-			}
-		}
-		
-		System.out.println(sb);
-	}
-		
+        PriorityQueue<Integer> queue = new PriorityQueue<>(
+                (o1, o2) -> {
+                    if (Math.abs(o1) == Math.abs(o2)) {
+                        return o1 > o2 ? 1 : -1;
+                    } else {
+                        return Math.abs(o1) - Math.abs(o2);
+                    }
+                }
+        );
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < N; i++) {
+            int now = Integer.parseInt(br.readLine());
+            if (now == 0) {
+                if (!queue.isEmpty()) {
+                    sb.append(queue.poll()).append("\n");
+                } else {
+                    sb.append(0).append("\n");
+                }
+            } else queue.add(now);
+        }
+
+        System.out.println(sb);
+
+    }
 }
