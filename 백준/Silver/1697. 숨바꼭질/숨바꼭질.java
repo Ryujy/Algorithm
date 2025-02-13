@@ -1,62 +1,54 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
+public class Main { // BOJ_1697_숨바꼭질
 
-public class Main {
-	
-	static int N; //수빈이 위치
-	static int K; // 동생 위치
-	static boolean[] visited = new boolean[100001];
-	
-	public static void main(String[] args) throws IOException{
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		N = Integer.parseInt(st.nextToken());
-		K = Integer.parseInt(st.nextToken());
-		
-		BFS();
-		
-	}
-	
-	public static void BFS() {
-		Queue<int[]> q = new ArrayDeque<int[]>();
-		
-		q.offer(new int[] {N,0}); //처음에 K 넣기
-		while(!q.isEmpty()) {
-			int[] e = q.poll(); //큐에서 뽑아오기
-			int data = e[0];
-			int depth = e[1];
-			if (data == K) { // 동생한테 도달했으면 시간넘기고 종료
-				System.out.println(depth);
-				return;
-			}
-			// 방문한 곳 방문처리
-			visited[data] = true;
-			// 현재 좌표에서 갈 수 있는 곳 다 큐에 넣기
-			if (valid(data-1)) {
-				q.offer(new int[] {data-1,depth+1});
-			}
-			if (valid(data+1)) {
-				q.offer(new int[] {data+1,depth+1});
-			}
-			if (valid(data*2)) {
-				q.offer(new int[] {data*2,depth+1});
-			}
-			
-		}
-	}
-	
-	public static boolean valid(int n) {
-		if (n < 0 || n > 100000 || visited[n]) {
-			return false;
-		}
-		return true;
-	}
+    static int n, k;
+    static boolean[] visit = new boolean[100001];
 
+    public static void main(String[] args) throws IOException {
+        BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken()); // 수빈
+        k = Integer.parseInt(st.nextToken()); // 동생
+
+        bfs();
+    }
+
+    private static void bfs(){
+        ArrayDeque<int[]> que = new ArrayDeque<>();
+        que.offer(new int[] {n, 0});
+
+        while (!que.isEmpty()){
+            int[] tmp = que.poll();
+            int cl = tmp[0]; //현재 위치
+            int ct = tmp[1]; //현재 시간
+            visit[cl] = true;
+
+            if (cl == k){
+                System.out.println(ct);
+                break;
+            }
+
+            if (valid(cl-1)) {
+                que.offer(new int[] {cl-1, ct+1});
+            }
+            if (valid(cl+1)) {
+                que.offer(new int[] {cl+1, ct+1});
+            }
+            if (valid(cl*2)) {
+                que.offer(new int[] {cl*2, ct+1});
+            }
+        }
+    }
+
+    private static boolean valid(int n){
+        if(n < 0 || n > 100000 || visit[n]){
+            return false;
+        }
+        return true;
+    }
 }
