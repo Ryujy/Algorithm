@@ -2,57 +2,52 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int N;
+    static ArrayList<Integer>[] tree;
+    static int[] parents;
     static boolean[] visited;
-    static int[] parent;
-    static ArrayList<Integer>[] adj;
-    static StringBuilder sb;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        sb = new StringBuilder();
-        N = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        StringTokenizer st;
 
+        int n = Integer.parseInt(br.readLine());
+        parents = new int[n+1];
+        visited = new boolean[n+1];
 
-        adj = new ArrayList[N+1];
-        for(int i = 1; i <= N; i++) {
-            adj[i] = new ArrayList<>();
+        tree = new ArrayList[n+1];
+
+        for (int i=0; i<n+1; i++){ // arrayList 초기화
+            tree[i] = new ArrayList<>();
         }
 
-        visited = new boolean[N+1];
-        for(int i = 1; i < N; i++) {
-            String[] input = br.readLine().split(" ");
-            int x = Integer.parseInt(input[0]);
-            int y = Integer.parseInt(input[1]);
+        for (int i=1; i<n; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
-            adj[x].add(y);
-            adj[y].add(x);
-
+            tree[a].add(b);
+            tree[b].add(a);
         }
 
-        parent = new int[N+1];
-        dfs(1);
-
-        for(int i = 2; i <= N; i++) {
-            sb.append(parent[i]).append("\n");
+        // 루트 노트 : 1
+        dfs(1, 0);
+        for (int i=2; i<n+1; i++){
+            sb.append(parents[i]).append('\n');
         }
-
         System.out.println(sb);
-
     }
 
-    static void dfs(int index) {
-        visited[index] = true;
+    private static void dfs(int node, int parent){
+        parents[node] = parent;
+        visited[node] = true;
 
-        for(int i : adj[index]) {
-            if(!visited[i]) {
-                parent[i] = index;
-                dfs(i);
-            }
-            
+        for (int child : tree[node]){
+            if (visited[child]) continue;
+            dfs(child, node);
         }
-
     }
-
 }
