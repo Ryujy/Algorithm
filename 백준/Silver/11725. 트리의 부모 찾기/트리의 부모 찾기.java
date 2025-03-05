@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 public class Main {
-    static ArrayList<ArrayList<Integer>> tree = new ArrayList<>();
+    static ArrayList<Integer>[] tree;
     static int[] parents;
     static boolean[] visited;
 
@@ -17,8 +17,10 @@ public class Main {
         parents = new int[n+1];
         visited = new boolean[n+1];
 
+        tree = new ArrayList[n+1];
+
         for (int i=0; i<n+1; i++){ // arrayList 초기화
-            tree.add(new ArrayList<>());
+            tree[i] = new ArrayList<>();
         }
 
         for (int i=1; i<n; i++){
@@ -26,8 +28,8 @@ public class Main {
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
 
-            tree.get(a).add(b);
-            tree.get(b).add(a);
+            tree[a].add(b);
+            tree[b].add(a);
         }
 
         // 루트 노트 : 1
@@ -41,7 +43,7 @@ public class Main {
         parents[node] = parent;
         visited[node] = true;
 
-        for (int child : tree.get(node)){
+        for (int child : tree[node]){
             if (child == parent || visited[child]) continue;
             dfs(child, node);
         }
