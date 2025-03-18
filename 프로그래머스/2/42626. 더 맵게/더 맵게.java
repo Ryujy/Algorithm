@@ -9,17 +9,17 @@ class Solution {
         }
 
         int cnt = 0;
-        int min = pq.peek();
-        while(min < K){
+        while(pq.peek() < K && pq.size() > 1){
             int firstMin = pq.poll();
-            if(pq.isEmpty()) return -1;
             int secondMin = pq.poll();
 
-            min = firstMin + (secondMin*2);
+            int mix = firstMin + (secondMin*2);
             cnt++;
-            pq.offer(min);
-            
-            min = pq.peek();
+            pq.offer(mix);
+        }
+        
+        if (pq.size() <= 1 && pq.peek() < K){
+            return -1;
         }
         
         return cnt;
