@@ -1,40 +1,35 @@
 import java.io.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.StringTokenizer;
 
-public class Main {
+class Main{ // 1654. 랜선자르기
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        int K = Integer.parseInt(st.nextToken());  //가지고 있는 랜선의 개수
-        int N = Integer.parseInt(st.nextToken());  // 필요한 랜선의 개수
-
-        int[] len = new int[K];
-
-        for(int i=0; i<K; i++){  // 가지고 있는 랜선들의 길이
-            len[i] = Integer.parseInt(br.readLine());
+        int k = Integer.parseInt(st.nextToken()); // 보유한 랜선 개수
+        int n = Integer.parseInt(st.nextToken()); // 필요한 랜선 개수
+        int[] lines = new int[k];
+        for (int i=0; i<k; i++){
+            lines[i] = Integer.parseInt(br.readLine());
         }
-        
-        // 랜선 길이 정렬
-        Arrays.sort(len);
-
-        // 이분탐색
-        long start = 1; // 최소 길이
-        long end = len[K-1]; // 최대 길이 = 가장 긴 랜선
-        long mid, cnt;
-
-        while(start<=end){
-            mid = (end + start)/2;
-            cnt = 0;
-
-            for(int i=0; i<K; i++){ //현재 mid로 구할 수 있는 랜선 개수
-                cnt += len[i]/mid;
+        Arrays.sort(lines);
+        long lt = 1;
+        long rt = lines[k-1];
+        long maxL = 0;
+        while(lt <= rt){
+            long mid = (lt + rt)/2;
+            int cnt = 0;
+            for(int l:lines){
+                cnt += (l/mid);
             }
+            if (cnt >= n){
+                lt = mid + 1;
+                maxL = mid;
 
-            if (cnt < N) end = mid - 1;
-            else start = mid + 1;
+            } else {
+                rt = mid - 1;
+            }
         }
-
-        System.out.println(end);
+        System.out.println(maxL);
     }
 }
