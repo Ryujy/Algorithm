@@ -1,48 +1,52 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+import static java.lang.Integer.*;
+import static java.lang.Math.*;
 
-public class Main {
+class Main{ // 15681. 트리와 쿼리
+
+    static int[] parents;
+    static int[] child;
     static ArrayList<Integer>[] tree;
-    static int[] children;
-    static int[] parent;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        int n = Integer.parseInt(br.readLine());
-        children = new int[n];
-        parent = new int[n];
+        int n = Integer.parseInt(br.readLine()); // 노드의 개수
+        parents = new int[n];
+        child = new int[n];
         tree = new ArrayList[n];
 
-        for (int i=0; i<n;i++){
+        for (int i=0; i<n; i++){
             tree[i] = new ArrayList<>();
         }
 
-        String[] str = br.readLine().split(" ");
+        StringTokenizer st = new StringTokenizer(br.readLine());
         for (int i=0; i<n; i++){
-            int p = Integer.parseInt(str[i]);
-            if (p == -1) continue;
-            children[p]++;
-            parent[i] = p; // 부모 노드 기록
-            tree[p].add(i); // 부모 노드에 자식 추가
+            int p = Integer.parseInt(st.nextToken());
+            if(p==-1) continue;
+            parents[i] = p; //부모 노드 기록
+            child[p]++;     //해당 부모에 자식 수 기록
+            tree[p].add(i); //부모 노드에 자식 추가
         }
+        int remove = Integer.parseInt(br.readLine()); // 지울 노드
 
-        int remove = Integer.parseInt(br.readLine());
-        children[parent[remove]]--;
+        child[parents[remove]]--; // 지울 노드의 부모의 자식 수 감소
         remove(remove);
         int cnt = 0;
-        for (int c:children){ // 리프노드 구하기
-            if (c == 0) cnt++;
+        for (int i=0; i<n; i++){
+            if (child[i] == 0) cnt++;
         }
         System.out.println(cnt);
     }
 
     private static void remove(int remove){
-        children[remove] = -1;
-        for (int child : tree[remove]){
-            remove(child);
+        child[remove] = -1; // 지울 노드의 자식 수 초기화
+        // 지울 노드의 자식 노드에 방문 -> 자식 수 초기화
+        for (int c:tree[remove]){
+            remove(c);
         }
     }
 }
