@@ -16,6 +16,8 @@ public class Main {
         }
     }
     static ArrayList<Node>[] tree;
+    static int ans;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
@@ -44,12 +46,14 @@ public class Main {
             int a = parseInt(st.nextToken());
             int b = parseInt(st.nextToken());
             dfs(a, b, visited, 0);
+            sb.append(ans).append('\n');
         }
+        System.out.println(sb);
     }
 
     static void dfs(int start, int end, boolean[] visited, int d){
         if (start == end){
-            System.out.println(d);
+            ans = d;
         }
         visited[start] = true;
         for (Node e:tree[start]){
