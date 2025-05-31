@@ -1,11 +1,11 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 import static java.lang.Integer.*;
-import static java.lang.Math.*;
 
-class Main{ // 1240. 노드사이의 거리
+public class Main {
 
     static class Node{
         int node;
@@ -16,48 +16,46 @@ class Main{ // 1240. 노드사이의 거리
         }
     }
     static ArrayList<Node>[] tree;
-    static boolean[] visited;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int n = Integer.parseInt(st.nextToken()); // 노드의 개수
-        int m = Integer.parseInt(st.nextToken()); // 노드 쌍의 개수
-        visited = new boolean[n+1];
+        int n = parseInt(st.nextToken()); //노드의 개수
+        int m = parseInt(st.nextToken()); //거리를 알고 싶은 노드 쌍의 개수
         tree = new ArrayList[n+1];
-        for (int k=0; k<n+1; k++){
-            tree[k] = new ArrayList<>();
+        for (int i=1; i<n+1; i++){
+            tree[i] = new ArrayList<>();
         }
 
         for (int i=0; i<n-1; i++){
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            int d = Integer.parseInt(st.nextToken());
+            int a = parseInt(st.nextToken());
+            int b = parseInt(st.nextToken());
+            int d = parseInt(st.nextToken());
+
             tree[a].add(new Node(b, d));
             tree[b].add(new Node(a, d));
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int j=0; j<m; j++){
+            boolean[] visited = new boolean[n+1];
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            getDistance(a, b, 0);
+            int a = parseInt(st.nextToken());
+            int b = parseInt(st.nextToken());
+            dfs(a, b, visited, 0);
         }
     }
 
-    private static void getDistance(int a, int b, int d){
-        if(a == b){
+    static void dfs(int start, int end, boolean[] visited, int d){
+        if (start == end){
             System.out.println(d);
-            return;
         }
-        visited[a] = true;
-        for (Node t:tree[a]){
-            if (!visited[t.node]){
-                getDistance(t.node, b, d+t.distance);
-            }
+        visited[start] = true;
+        for (Node e:tree[start]){
+            int next = e.node;
+            if (visited[next]) continue;
+            dfs(next, end, visited, d + e.distance);
         }
-        visited[a] = false;
     }
 }
