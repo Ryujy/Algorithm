@@ -2,9 +2,9 @@ import java.util.*;
 
 class Solution {
     static int answer, target;
-    public int solution(int[] numbers, int t) {
+    public int solution(int[] numbers, int target) {
         answer = 0;
-        target = t;
+        this.target = target;
         dfs(0, 0, numbers);
         return answer;
     }
