@@ -45,17 +45,11 @@ public class Main { //https://www.acmicpc.net/problem/22254
             pq.add(time[i]);
         }
         for (int i=m; i<n; i++){
-            if (!pq.isEmpty()){
-                int tmp = pq.poll();
-                tmp += time[i];
-                pq.add(tmp);
-            }
+            int tmp = pq.poll();
+            tmp += time[i];
+            if (tmp > x) return false;
+            pq.add(tmp);
         }
-        long res = 0;
-
-        while (!pq.isEmpty()) {
-            res = pq.poll();
-        }
-        return res <= x;
+        return true;
     }
 }
