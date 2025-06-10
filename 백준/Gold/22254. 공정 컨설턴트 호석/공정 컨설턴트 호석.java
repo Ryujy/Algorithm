@@ -9,15 +9,14 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 
 public class Main { //https://www.acmicpc.net/problem/22254
-    static int n;
-    static long x;
+    static int n, x;
     static int[] time;
-    static PriorityQueue<Long> pq;
+    static PriorityQueue<Integer> pq;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         n = parseInt(st.nextToken()); // 선물 주문의 개수
-        x = parseLong(st.nextToken()); // 제작 완료까지 남은 시간
+        x = parseInt(st.nextToken()); // 제작 완료까지 남은 시간
         st = new StringTokenizer(br.readLine());
         time = new int[n]; // 선물에 필요한 공정 시간
         for (int i=0; i<n; i++){
@@ -31,7 +30,7 @@ public class Main { //https://www.acmicpc.net/problem/22254
             int mid = (lt+rt)/2;
 
             if (run(mid)){ // mid <= x
-                k = Math.min(mid, k);
+                k = mid;
                 rt = mid -1;
             } else {
                 lt = mid +1;
@@ -41,13 +40,13 @@ public class Main { //https://www.acmicpc.net/problem/22254
     }
 
     static boolean run(int m){
-        pq = new PriorityQueue<>((x, y) -> Long.compare(x, y));
+        pq = new PriorityQueue<>();
         for (int i=0; i<m; i++){ //공정라인 초기값 세팅
-            pq.add(0L);
+            pq.add(time[i]);
         }
-        for (int i=0; i<n; i++){
+        for (int i=m; i<n; i++){
             if (!pq.isEmpty()){
-                long tmp = pq.poll();
+                int tmp = pq.poll();
                 tmp += time[i];
                 pq.add(tmp);
             }
