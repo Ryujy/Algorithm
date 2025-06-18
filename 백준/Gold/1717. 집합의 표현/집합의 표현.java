@@ -1,71 +1,63 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import static java.lang.Integer.parseInt;
 
 public class Main {
 
-	static int n, m;
-	static int[] parents;
+    static int[] parent;
 
-	private static void makeSet() {
-		parents = new int[n + 1];
-		for (int i = 0; i < n + 1; i++) {
-			parents[i] = i; // 원소가 {1}, {2}, ... {n}
-		}
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	private static int find(int a) {
-		// 부모 찾기
-		if (a == parents[a])
-			return a; // 대표자가 자기 자신
-		return parents[a] = find(parents[a]); // 부모의 부모를 내 부모로 => 대표자를 부모로 저장
-	}
+        int n = parseInt(st.nextToken()); // 집합의 개수
+        int m = parseInt(st.nextToken()); // 연산의 개수
 
-	private static void union(int a, int b) { // 합집합
-		a = find(a); // 대표자 찾기
-		b = find(b);
+        parent = new int[n+1];
+        for (int i=0; i<n+1; i++){
+            parent[i] = i;
+        }
 
-		if (a == b)
-			return; // 이미 같은 집합
-		if (a > b) {
-			parents[a] = b;
-		} else {
-			parents[b] = a;
-		}
-		find(b); // 부모 배열 갱신
-	}
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<m; i++){
+            st = new StringTokenizer(br.readLine());
+            int operationType = parseInt(st.nextToken());
+            int a = parseInt(st.nextToken());
+            int b = parseInt(st.nextToken());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		StringBuilder sb = new StringBuilder();
+            if(operationType == 0){ //합집합
+                unionSet(a, b);
+            } else { // 같은 집합인지 확인
+                if (find(a) == find(b)) {
+                    sb.append("yes");
+                } else {
+                    sb.append("no");
+                }
+                sb.append("\n");
+            }
+        }
+        System.out.println(sb);
+    }
+    // 합집합 연산
+    private static void unionSet(int a, int b){
+        // 합하게 되면 a와 b 중에 더 작은 수의 집합으로 합치는 규칙으로 설정하자
+        int rootA = find(a); // a의 대표 원소 찾기
+        int rootB = find(b);
 
-		st = new StringTokenizer(br.readLine());
-		n = Integer.parseInt(st.nextToken()); // n개의 집합
-		m = Integer.parseInt(st.nextToken());
+        if (rootA != rootB) {
+            parent[rootB] = rootA;
+        }
+    }
 
-		makeSet();
-		for (int i = 0; i < m; i++) { // 연산의 개수
-			st = new StringTokenizer(br.readLine());
-			// 합집합 0 a b , 같은 대표자인지 확인 1 a b
-			int oper = Integer.parseInt(st.nextToken());
-			int a = Integer.parseInt(st.nextToken());
-			int b = Integer.parseInt(st.nextToken());
-
-			if (oper == 0)
-				union(a, b);
-			else {
-				a = find(a);
-				b = find(b);
-				if (a == b)
-					sb.append("YES");
-				else
-					sb.append("NO");
-				sb.append("\n");
-			}
-		}
-		System.out.println(sb);
-	}
-
+    // x의 대표 원소 찾기 (경로 압축, union find)
+    private static int find(int x){
+        if (parent[x] == x) {
+            return x;
+        }
+        return parent[x] = find(parent[x]);
+    }
 }
