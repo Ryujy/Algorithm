@@ -1,29 +1,43 @@
-import java.io.*;
-import java.sql.SQLOutput;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-// [BOJ] 1003 : 피보나치 함수
+import static java.lang.Integer.parseInt;
+
 public class Main {
-    public static void main(String[] args) throws IOException{
+
+    static class result{
+        int zero;
+        int one;
+        result(int zero, int one){
+            this.zero = zero;
+            this.one = one;
+        }
+    }
+    static result[] fibo = new result[41];
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int T = Integer.parseInt(br.readLine());
-        int[][] dp = new int[41][2];
-        dp[0][0] = 1;
-        dp[0][1] = 0;
-        dp[1][0] = 0;
-        dp[1][1] = 1;
-
-        for (int i=2; i<41; i++){
-            dp[i][0] = dp[i-1][0] + dp[i-2][0];
-            dp[i][1] = dp[i-1][1] + dp[i-2][1];
-        }
-
+        StringBuilder sb = new StringBuilder();
+        dp();
+        int T = parseInt(br.readLine());
         for (int tc=0; tc<T; tc++){
-            int fibo = Integer.parseInt(br.readLine());
-            System.out.println(dp[fibo][0] +" "+dp[fibo][1]);
-        }
+            int n = parseInt(br.readLine());
 
+            // 출력: 0의 횟수 | 1의 횟수
+            sb.append(fibo[n].zero).append(" ").append(fibo[n].one).append('\n');
+        }
+        System.out.println(sb);
     }
 
+    static void dp(){
+        fibo[0] = new result(1, 0);
+        fibo[1] = new result(0, 1);
+
+        for (int i=2; i<41; i++){
+            int z = fibo[i-1].zero + fibo[i-2].zero;
+            int o = fibo[i-1].one + fibo[i-2].one;
+            fibo[i] = new result(z, o);
+        }
+    }
 }
