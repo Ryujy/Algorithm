@@ -3,80 +3,83 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
+
 public class Main { // BOJ_6593_상범빌딩
 
+    static int L, R, C;
     static char[][][] map;
-    static boolean[][][] visited;
-    static ArrayDeque<int[]> que = new ArrayDeque<>();
-    static int[] dr = {1, -1, 0, 0, 0, 0}; //동서남북상하
-    static int[] dc = {0, 0, 1, -1, 0, 0}; //동서남북상하
-    static int[] dl = {0, 0, 0, 0, 1, -1}; //동서남북상하
+    static StringBuilder sb = new StringBuilder();
+    static int[] dl = {0, 0, 0, 0, 1, -1};
+    static int[] dr = {0, 0, 1, -1, 0, 0};
+    static int[] dc = {1, -1, 0, 0, 0, 0};
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
 
         while (true){
-            st = new StringTokenizer(br.readLine());
-            int L = Integer.parseInt(st.nextToken()); // 층
-            int R = Integer.parseInt(st.nextToken()); // 행
-            int C = Integer.parseInt(st.nextToken()); // 열
-
-            if (L == 0 && R == 0 && C == 0) break;
-
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            L = parseInt(st.nextToken()); // 빌딩 층 수
+            R = parseInt(st.nextToken()); // 빌딩 행
+            C = parseInt(st.nextToken()); // 열
+            if (L == 0 && R == 0 && C == 0) {
+                System.out.println(sb);
+                break;
+            }
             map = new char[L][R][C];
-            visited = new boolean[L][R][C];
 
-            que.clear();
-            for (int i=0; i<L; i++){
-                for (int j=0; j<R+1; j++){
+            int startL = -1, startR = -1, startC = -1;
+
+            for (int l=0; l<L; l++){
+                for (int r=0; r<R; r++){
                     String str = br.readLine();
-                    if(str.equals("")) continue;
-                    for (int k=0; k<C; k++){
-                        char ch = str.charAt(k);
-                        map[i][j][k] = ch;
-                        if(ch == 'S'){
-                            que.offer(new int[] {i, j, k});
-                            visited[i][j][k] = true;
+                    for (int c=0; c<C; c++){
+                        char tmp = str.charAt(c);
+                        map[l][r][c] = tmp;
+                        if (tmp == 'S') { // 시작점
+                            startL = l;
+                            startR = r;
+                            startC = c;
                         }
                     }
                 }
-            }
+                String str = br.readLine();
+            } // map end
 
-            int res = bfs(L, R, C);
-            if (res == -1){
-                System.out.println("Trapped!");
-            } else {
-                System.out.println("Escaped in "+ res +" minute(s).");
-            }
+            bfs(startL, startR, startC, 0);
         }
     }
 
-    public static int bfs(int L, int R, int C){
+    private static void bfs(int l, int r, int c, int time){
+        ArrayDeque<int[]> queue = new ArrayDeque<>();
+        boolean[][][] visited = new boolean[L][R][C];
+        queue.add(new int[]{l, r, c, time});
+        visited[l][r][c] = true;
 
-        int time = 0;
-        while(!que.isEmpty()){
-            int size = que.size();
+        while (!queue.isEmpty()){
+            int[] cur = queue.poll();
+            int cl = cur[0];
+            int cr = cur[1];
+            int cc = cur[2];
+            int ct = cur[3];
 
-            for (int i=0; i<size; i++) {
-                int[] cur = que.poll();
-                if (map[cur[0]][cur[1]][cur[2]] == 'E') {
-                    return time;
-                }
+            if (map[cl][cr][cc] == 'E'){
+                sb.append("Escaped in ").append(ct).append(" minute(s).").append('\n');
+                return;
+            }
 
-                for (int d = 0; d < 6; d++) {
-                    int nl = cur[0] + dl[d];
-                    int nr = cur[1] + dr[d];
-                    int nc = cur[2] + dc[d];
+            for(int d=0; d<6; d++){
+                int nl = cl + dl[d];
+                int nr = cr + dr[d];
+                int nc = cc + dc[d];
 
-                    if (nl < 0 || nr < 0 || nc < 0 || nl >= L || nr >= R || nc >= C) continue;
-                    if (visited[nl][nr][nc] || map[nl][nr][nc] == '#') continue;
-                    que.offer(new int[]{nl, nr, nc});
+                if(nl >= 0 && nr >= 0 && nc >= 0 && nl < L && nr < R && nc < C
+                        && !visited[nl][nr][nc] && map[nl][nr][nc] != '#'){
+                    queue.add(new int[]{nl, nr, nc, ct + 1});
                     visited[nl][nr][nc] = true;
                 }
             }
-            time++;
         }
-        return -1;
+        sb.append("Trapped!").append('\n');
     }
 }
