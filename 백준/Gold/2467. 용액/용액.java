@@ -4,45 +4,36 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-// 백준 - 용액
+// BOJ_2470 두 용액
 public class Main {
 
-	static int N;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int[] arr = new int[n];
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        for (int i=0; i<n; i++){
+            arr[i] = Integer.parseInt(st.nextToken());
+        }
+        // 특성값이 0에 가장 가까운 용액을 만들어내는 두 용액의 특성값을 출력한다. (특성값의 오름차순)
+        Arrays.sort(arr);
 
-		N = Integer.parseInt(br.readLine()); // 용액의 수
-		
-		long[] liquid = new long[N];
-		
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for (int i=0; i<N; i++) {
-			liquid[i] = Integer.parseInt(st.nextToken());
-		}
-		
-		int left = 0;
-		int right = N-1;
-		long before = Math.abs(liquid[left] + liquid[right]);
-		long ans1 = liquid[left];
-		long ans2 = liquid[right];
-		
-		while(left < right) {
-			long cur = liquid[left] + liquid[right];
-			if (before > Math.abs(cur)) {
-				ans1 = liquid[left];
-				ans2 = liquid[right];
-				before = Math.abs(cur);
-			}
-			
-			if (cur <= 0) {
-				left++;
-			} else {
-				right--;
-			}
-		}
-		
-		System.out.println(ans1 + " " +ans2);
-		
-	}
+        int lt = 0, rt = n-1;
+        int sum;
+        int temp = Integer.MAX_VALUE;
+        int ans1 = 0, ans2 = 0;
+        while(lt < rt){
+            sum = arr[lt] + arr[rt];
+            if(Math.abs(sum) < temp){
+                temp = Math.abs(arr[lt]+arr[rt]);
+                ans1 = arr[lt];
+                ans2 = arr[rt];
+            }
+            // 어떤 경우에 lt와 rt를 각각 움직여야하는지 감을 잡기 어려웠다.
+            if(sum > 0) rt--;
+            else lt++;
+        }
+        System.out.println(ans1+" "+ans2);
+    }
 }
